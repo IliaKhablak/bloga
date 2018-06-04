@@ -1,0 +1,73 @@
+<h3 class="center">Carousel pictures</h3>
+<div class="row">
+	<div class="row">
+		<div class="file-field input-field col s12 ">
+	      <div class="btn">
+	        <span>File</span>
+				<input type="file" (change)="getFile($event)" multiple id="needreset">
+			</div>
+			<div class="file-path-wrapper">
+    			<input class="file-path validate" type="text" placeholder="Image require">
+			</div>
+			<div *ngIf='err' class="err-alert">{{err}}</div>
+			<div *ngIf='sucess' class="sucess-alert">well done!</div>
+			<div class="progress" *ngIf="img_upload && !err && !sucess" id="puscontainer">
+				<div class='determinate' id='pus' style='width: 0%'></div>
+			</div>
+		</div>
+	</div>
+
+	<div *ngIf="edit.urls.length > 0" class="center">
+		<a *ngFor="let url of edit.urls; let idx = index" (click)="delFromUpl(idx)"><img  style='width:60px;height:auto;margin:5px;' [src]="url" class="hoverable img"></a>
+	</div>
+</div>
+<h3 class="center"> New post</h3>
+<form (ngSubmit)="createPost(post); postForm.reset();" #postForm='ngForm'>
+	<div class="row">
+		<div class="input-field col s12">
+			<input type="text" name="title"
+			id="title" #title='ngModel' class="validate"
+			[(ngModel)]='post.title' required>
+			<label for="title" data-error="Title is required" data-success="Everithing is ok now" class="active">Title</label>
+		</div>
+	</div>
+	<div class="row">
+		<div class="input-field col s12">
+			<input type="text" name="category"
+			id="category" #category='ngModel' class="validate"
+			[(ngModel)]='post.category' required>
+			<label for="category" data-error="Category is required" data-success="Everithing is ok now" class="active">Category</label>
+		</div>
+	</div>
+	<div class="row">
+		<div class="input-field col s12">
+			<textarea class="materialize-textarea validate" id="text"
+				name="text" #text='ngModel'[(ngModel)]='post.text' required>
+			</textarea>
+			<label for="text" data-error="Text is required" data-success="Everithing is ok now" class="active">Text</label>
+		</div>
+	</div>
+	<div class="row">
+		<div class="file-field input-field col s12 ">
+	      <div class="btn">
+	        <span>File</span>
+				<input type="file" (change)="getFile2($event)" multiple id="needreset">
+			</div>
+			<div class="file-path-wrapper">
+    			<input class="file-path validate" type="text" placeholder="Image require">
+			</div>
+			<div *ngIf='err' class="err-alert">{{err}}</div>
+			<div *ngIf='sucess' class="sucess-alert">well done!</div>
+			<div class="progress" *ngIf="img_upload && !err && !sucess" id="puscontainer">
+				<div class='determinate' id='pus2' style='width: 0%'></div>
+			</div>
+		</div>
+	</div>
+
+	<div *ngIf="urls.length > 0" class="center">
+		<a *ngFor="let url of urls; let inx = index" (click)="delFromUpl2(inx)"><img  style='width:60px;height:auto;margin:5px;' [src]="url" class="hoverable img"></a>
+	</div>
+	<div>
+		<button type="submit" class="waves-effect waves-teal btn" [disabled]="!postForm.form.valid">Create</button>
+	</div>
+</form>

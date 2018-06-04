@@ -1,0 +1,28 @@
+<div class="modal" materialize="modal" [materializeActions]="modalActions">
+
+
+  <div class="modal-content">
+
+    <div class="row">
+
+      <div class="row">
+
+        <span class="modal-close right">
+          <i class="fa fa-times" aria-hidden="true"></i>
+        </span>
+      </div>
+
+      <div class="row">
+        <h3 class="grey-text text-darken-2">{{authMode}}</h3>
+
+        <app-login-form (onFormResult)="onLoginFormResult($event)"
+                        *ngIf="isLoginMode()">
+
+        </app-login-form>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

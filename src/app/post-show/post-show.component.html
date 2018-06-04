@@ -1,0 +1,5 @@
+<div>
+	{{edit.post.title}}
+	<img *ngFor="let img of edit.post.images" [src]="img" style="height: 100px;width: auto;">
+	<a (click)="deletePost(edit.post.id)">delete</a>
+</div>

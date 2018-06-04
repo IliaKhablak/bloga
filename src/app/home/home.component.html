@@ -1,0 +1,15 @@
+<div #carousel id="carousel" class="carousel carousel-slider"  materialize="carousel"  [materializeActions]="edit.actions" [materializeParams]="[{full_width: true, indicators:true}]">
+        <a *ngFor="let img of edit.urls" class="carousel-item" style="background-color: white);"><img [src]="img"  ></a>
+</div>
+
+<div class="row" *ngFor="let post of edit.posts">
+  <div class="col s12">
+    <h1> Welcome</h1>
+    <p >
+		<a (click)="goToShow(post.id)" >{{post.title}}</a>     
+    </p>
+    <div >
+    	<img *ngFor="let img of post.images" [src]="img" style="height: 100px;width: auto;">
+    </div>
+  </div>
+</div>
