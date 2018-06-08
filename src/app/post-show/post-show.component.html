@@ -1,5 +1,121 @@
 <div>
 	{{edit.post.title}}
-	<img *ngFor="let img of edit.post.images" [src]="img" style="height: 100px;width: auto;">
-	<a (click)="deletePost(edit.post.id)">delete</a>
+	<img *ngFor="let img of edit.post.images" [src]="img[0]" style="height: 100px;width: auto;">
+	<a (click)="deletePost(edit.post.id)">delete |</a>
+	<a (click)="bla()"> edit</a>
+	<div [froalaView]="edit.post.text"></div>
 </div>
+<ng-container *ngIf="pushed">
+	<h3 class="center"> Edit post</h3>
+	<form (ngSubmit)="editPost(edit.post);bla()" #postForm='ngForm'>
+		<div class="row">
+			<div class="input-field col s12">
+				<input type="text" name="title"
+				id="title" #title='ngModel' class="validate"
+				[(ngModel)]='edit.post.title' required>
+				<label for="title" data-error="Title is required" data-success="Everithing is ok now" class="active">Title</label>
+			</div>
+		</div>
+		<div class="row">
+			<div class="input-field col s12">
+				<input type="text" name="category"
+				id="category" #category='ngModel' class="validate"
+				[(ngModel)]='edit.post.category' required>
+				<label for="category" data-error="Category is required" data-success="Everithing is ok now" class="active">Category</label>
+			</div>
+		</div>
+		<div class="row">
+			<div class="input-field col s12">
+				<textarea [froalaEditor] class="materialize-textarea validate" id="text"
+					name="text" #text='ngModel'[(ngModel)]='edit.post.text' required>
+				</textarea>
+				<label for="text" data-error="Text is required" data-success="Everithing is ok now" class="active">Text</label>
+			</div>
+		</div>
+		<div class="row">
+			<div class="file-field input-field col s12 ">
+		      <div class="btn">
+		        <span>File</span>
+					<input type="file" (change)="getFile2($event)" multiple id="needreset">
+				</div>
+				<div class="file-path-wrapper">
+	    			<input class="file-path validate" type="text" placeholder="Image require">
+				</div>
+				<div *ngIf='err' class="err-alert">{{err}}</div>
+				<div *ngIf='sucess' class="sucess-alert">well done!</div>
+				<div class="progress" *ngIf="img_upload && !err && !sucess" id="puscontainer">
+					<div class='determinate' id='pus2' style='width: 0%'></div>
+				</div>
+			</div>
+		</div>
+
+		<div *ngIf="edit.post.images.length > 0" class="center">
+			<div *ngFor="let url of edit.post.images; let inx = index">
+				<a  (click)="delFromUpl2(inx)"><img  style='width:60px;height:auto;margin:5px;' [src]="url[0]" class="hoverable img" align="middle"></a><a (click)="edit_descr(inx)"><p style="vertical-align: middle;" class="center">{{url[1]}}</p></a>
+			</div>
+		</div>
+		<div>
+			<button type="submit" class="waves-effect waves-teal btn" [disabled]="!postForm.form.valid">Update</button>
+		</div>
+	</form>
+</ng-container>
+
+<!-- MODAL SECTION -->
+<!-- ************************************************************************* -->
+
+<div class="modal" materialize="modal" [materializeActions]="modalActions" [materializeParams]="[{dismissible:false}]">
+    <div class="modal-content">
+	    <div class="row">
+	    	<form (ngSubmit)="add_descr()" #modForm='ngForm'>
+	    		<div class="input-field col s12">
+					<input type="text" name="descr"
+					id="descr" class="validate"
+					[(ngModel)]='descr'
+					required>
+					<label for="descr" data-error="descr is required" data-success="Everithing is ok now" class="active">descr</label>
+				</div>
+	    		<button type="submit" class="waves-effect waves-teal btn" [disabled]="!modForm.form.valid">Create</button>
+	    	</form>
+	   	</div>
+    </div>
+</div>
+
+<!-- ******************************************************************************** -->
+
+
+<!-- COMMENT SECTION
+****************************************************************************************** -->
+<H2>COMMENT SECTION</H2>
+<div *ngFor="let comment of comments">
+	{{comment.created_at | date: 'dd/MM/yyyy hh:mm'}} {{comment.user_name}} said: <a (click)="deleteComment(comment.id,comment.post_id)" *ngIf="(edit.user.id && edit.user.id == comment.user_id) || (authService.userSignedIn$ | async)">delete</a>
+	<div [froalaView]="comment.text"></div>
+</div>
+
+
+<form (ngSubmit)="add_com(comment);comForm.reset();" #comForm='ngForm'>
+	<h5 *ngIf="!edit.user.id">Subscribe before put the comment, unsubscribed users can not delete their comments!</h5>
+	<div class="switch" *ngIf="edit.user.id">
+	    <label>
+	      Leave comment as {{edit.user.name}}
+	      <input type="checkbox" name="news" [(ngModel)]='news'>
+	      <span class="lever"></span>
+	      Leave comment under another name
+	    </label>
+	</div>
+	<br>
+	<div class="input-field col s12" *ngIf="!edit.user.id || news">
+		<input type="text" name="name"
+		id="name" class="validate"
+		[(ngModel)]='comment.user_name'
+		required>
+		<label for="name" data-error="name is required" data-success="Everithing is ok now" class="active">name</label>
+	</div>
+	<div class="input-field col s12">
+		<textarea [froalaEditor] class="materialize-textarea validate"
+			name="text" #text='ngModel'[(ngModel)]='comment.text' required>
+		</textarea>
+	</div><br>
+	<button type="submit" class="waves-effect waves-teal btn" [disabled]="!comForm.form.valid">Create</button>
+</form>
+
+<!-- ****************************************************************************************** -->

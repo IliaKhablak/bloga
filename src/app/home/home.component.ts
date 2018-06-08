@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {EditService} from '../services/edit.service';
 import {Router} from '@angular/router';
+import * as $ from 'jquery';
+
 
 @Component({
   selector: 'app-home',
@@ -19,5 +21,13 @@ export class HomeComponent implements OnInit {
     let postLink = ['/posts', id];
     this.router.navigate(postLink);
   }
+
+  catShow(value){
+      this.edit.catsItem = this.edit.posts.filter(
+          item => item.category.toLowerCase().indexOf(value.toLowerCase()) > -1
+
+      )
+  }
+
 
 }

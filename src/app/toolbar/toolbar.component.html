@@ -1,23 +1,58 @@
-<div class="navbar-fixed">
 
-  <nav  role="navigation">
 
-    <div class="nav-wrapper blue ">
-      <a [routerLink]="['']" id="logo-container" class="brand-logo">Rails & Angular Auth</a>
+ <!--  <nav class="z-depth-0">
 
-      <ul class="right hide-on-med-and-down">
+    <div class="nav-wrapper orange lighten-5">
+      <a [routerLink]="['']" id="logo-container" class="brand-logo"></a> -->
+      
+          <ul class="hide-on-med-and-down" id="firstul">
+            <li><a [routerLink]="['/']">Home</a></li>
+            <li><a >Blog</a></li>
+            <li><a >Gallery</a></li>
+            <li><a >About Me</a></li>
+            <li><a >Services</a></li>
+            <li><a >Contacts</a></li>
+          </ul>
+       
+          <ul class="hide-on-med-and-down right" id="secondul">
+            <li *ngIf="!(authService.userSignedIn$ | async) && edit.user.id" id="welcomeLi"> Welcome back, {{edit.user.name}}!</li>
+            <li *ngIf="!(authService.userSignedIn$ | async) && !edit.user.id"> <a (click)="openModal()" >Subscribe</a></li>
+            <li *ngIf="!(authService.userSignedIn$ | async) && edit.user.id"> <a (click)="unsubscribe()" >Unsubscribe</a></li>
+            
+            <li *ngIf="(authService.userSignedIn$ | async)"><a [routerLink]="['/profile']">PROFILE</a></li>
+            <li *ngIf="(authService.userSignedIn$ | async)"><a (click)="logOut()">LOGOUT</a></li>
+          </ul>
+      
 
-        <li *ngIf="!(authService.userSignedIn$ | async)"> <a (click)="presentAuthDialog()" >LOGIN</a></li>
+    <!-- </div> -->
+    <div class="divider hide-on-med-and-down"></div>
+  <!-- </nav> -->
+<a *ngIf="!(authService.userSignedIn$ | async)" (click)="presentAuthDialog()" id="loginBtn"></a>
 
-        <li *ngIf="(authService.userSignedIn$ | async)"><a [routerLink]="['/profile']">PROFILE</a></li>
-        <li *ngIf="(authService.userSignedIn$ | async)"><a (click)="logOut()">LOGOUT</a></li>
-
-      </ul>
-
-    </div>
-
-  </nav>
-
-</div>
 
 <app-auth-dialog #authDialog ></app-auth-dialog>
+
+<div class="modal" materialize="modal" [materializeActions]="modalActions">
+    <div class="modal-content">
+      <h3 *ngIf="newOne">Hi, you are new here, it would be realy good for you to subscribe stride a way!</h3>
+      <div class="row">
+        <form (ngSubmit)="subscribe(edit.user)" #subscForm='ngForm'>
+          <div class="input-field col s12">
+            <input type="text" name="email"
+            class="validate"
+            [(ngModel)]='edit.user.email'
+            required>
+            <label for="email" data-error="email is required" data-success="Everithing is ok now" class="active">email</label>
+          </div>
+          <div class="input-field col s12">
+            <input type="text" name="name"
+            class="validate"
+            [(ngModel)]='edit.user.name'
+            required>
+            <label for="name" data-error="name is required" data-success="Everithing is ok now" class="active">name</label>
+          </div>
+          <button type="submit" class="waves-effect waves-teal btn" [disabled]="!subscForm.form.valid">Create</button>
+        </form>
+      </div>
+    </div>
+</div>

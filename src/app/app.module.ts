@@ -16,6 +16,7 @@ import {AuthGuard} from "./guards/auth.guard";
 import {EditService} from './services/edit.service';
 import { Ng2PicaModule } from 'ng2-pica';
 import { PostShowComponent } from './post-show/post-show.component';
+import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,9 @@ import { PostShowComponent } from './post-show/post-show.component';
     MaterializeModule,
     FormsModule,
     HttpModule,
-    Ng2PicaModule
+    Ng2PicaModule,
+    FroalaEditorModule.forRoot(), 
+    FroalaViewModule.forRoot()
   ],
   providers: [Angular2TokenService,AuthService,AuthGuard,EditService],
   bootstrap: [AppComponent]

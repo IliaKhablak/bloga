@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, EventEmitter } from '@angular/core';
 import {keys} from 'config';
 import {Router} from "@angular/router";
 import {AuthService} from "../services/auth.service";
@@ -6,6 +6,7 @@ import {Angular2TokenService} from "angular2-token";
 import * as $ from 'jquery';
 import {EditService} from '../services/edit.service';
 import {Post} from '../objects/post';
+import {MaterializeAction} from "angular2-materialize";
 
 @Component({
   selector: 'app-profile',
@@ -19,7 +20,10 @@ export class ProfileComponent implements OnInit {
 	err:string;
 	AWS = require('aws-sdk');
 	post = new Post;
-  urls:string[]=[];
+  urls:any[]=[];
+  modalActions = new EventEmitter<string|MaterializeAction>();
+  descr:string = '';
+  inx:string = null;
 
   constructor(public authTokenService:Angular2TokenService,
               public authService:AuthService,
@@ -43,9 +47,9 @@ export class ProfileComponent implements OnInit {
       this.img_upload = false;
       this.edit.posts = res.posts;
        post.images.forEach(function(el){
-        let s3 = new self.AWS.S3().copyObject({Bucket: keys.aws_bucket+'/'+res.id, CopySource: keys.aws_bucket+'/'+el.split('/')[el.split('/').length-1], Key: el.split('/')[el.split('/').length-1]}, function(err, data) {
+        let s3 = new self.AWS.S3().copyObject({Bucket: keys.aws_bucket+'/'+res.id, CopySource: keys.aws_bucket+'/'+el[0].split('/')[el[0].split('/').length-1], Key: el[0].split('/')[el[0].split('/').length-1]}, function(err, data) {
         
-         let s3 = new self.AWS.S3().deleteObject({Bucket: keys.aws_bucket, Key: el.split('/')[el.split('/').length-1]},function(err, data) {
+         let s3 = new self.AWS.S3().deleteObject({Bucket: keys.aws_bucket, Key: el[0].split('/')[el[0].split('/').length-1]},function(err, data) {
              
          }); 
         })   
@@ -77,7 +81,7 @@ export class ProfileComponent implements OnInit {
       let a = self.edit.urls.length;
       let urlsa = self.edit.urls;
       urlsa[a] = 'https://s3-ap-southeast-1.amazonaws.com/'+keys.aws_bucket+'/'+s3res.Key;
-      self.edit.updateTheme(urlsa).subscribe(res=>self.edit.urls=res.image)
+      self.edit.updateTheme(urlsa).subscribe(res=>self.edit.urls=res.images)
     });
   }
 
@@ -101,16 +105,26 @@ export class ProfileComponent implements OnInit {
     }).send(function(error, s3res) { 
       if (error) {self.err = error.message;}else{self.sucess = true;};
       let a = self.urls.length;
-      self.urls[a] = 'https://s3-ap-southeast-1.amazonaws.com/'+keys.aws_bucket+'/'+s3res.Key;
+      self.urls[a] = [];
+      self.urls[a][0] = 'https://s3-ap-southeast-1.amazonaws.com/'+keys.aws_bucket+'/'+s3res.Key;
+      // self.urls[a][1] = self.add_description();
+      self.openModal();
     });
   }
 
   delFromUpl2(idx){
     let self = this;
-    let s3 = new this.AWS.S3().deleteObject({Bucket: keys.aws_bucket, Key: this.urls[idx].split('/')[this.urls[idx].split('/').length-1]},function(err, data) {
+    let s3 = new this.AWS.S3().deleteObject({Bucket: keys.aws_bucket, Key: this.urls[idx][0].split('/')[this.urls[idx][0].split('/').length-1]},function(err, data) {
       if (data){self.urls.splice(idx, 1);}else{console.log(err)}
     }); 
     
+  }
+
+  add_descr(){
+    this.closeModal();
+    let a = this.urls.length;
+    if(this.inx){this.urls[this.inx][1] = this.descr;this.inx=null;}else{this.urls[a-1][1] = this.descr;}
+    this.descr = '';
   }
 
   makeid() {
@@ -128,10 +142,24 @@ export class ProfileComponent implements OnInit {
     let s3 = new this.AWS.S3().deleteObject({Bucket: keys.aws_bucket, Key: 'themes/'+this.edit.urls[idx].split('/')[this.edit.urls[idx].split('/').length-1]},function(err, data) {
       if (data){
       	self.edit.urls.splice(idx, 1);
-      	self.edit.updateTheme(self.edit.urls).subscribe(res=>self.edit.urls=res.image)
+      	self.edit.updateTheme(self.edit.urls).subscribe(res=>self.edit.urls=res.images)
       }else{console.log(err)}
     }); 
     
+  }
+
+  openModal() {
+      this.modalActions.emit({action:"modal",params:['open']});
+  }
+
+  closeModal() {
+      this.modalActions.emit({action:"modal",params:['close']});
+  }
+
+  edit_descr(inx){
+    this.inx = inx.toString();;
+    this.descr = this.urls[inx][1];
+    this.openModal();
   }
 
 }

@@ -4,6 +4,8 @@ import 'rxjs/add/operator/map';
 import {MaterializeAction} from "angular2-materialize";
 import {Http, Response, Headers, RequestOptions} from '@angular/http';
 import {Post} from '../objects/post';
+import {Comment} from '../objects/comment';
+import {User} from '../objects/user';
 
 @Injectable()
 export class EditService {
@@ -14,16 +16,17 @@ export class EditService {
 	options: RequestOptions;
 	private prodsUrl = 'http://0.0.0.0:3000/themes';
   private postsUrl = 'http://0.0.0.0:3000/posts';
+  private commentsUrl = 'http://0.0.0.0:3000/comments';
+  private usersUrl = 'http://0.0.0.0:3000/user_blas';
   post = new Post;
   posts:Post[] = [];
+  user = new User;
+  cats:Post[] = [];
+  catsItem:Post[] = null;
 
 
   constructor(private http:Http) {
-  	window.setTimeout(()=>{
-	  	if (this.carouselEl) this.carouselEl.classList.toggle('initialized');
-	    this.actions.emit('carousel');
-	},2000)
-	this.headers = new Headers({'Content-Type':'application/json'});
+  	this.headers = new Headers({'Content-Type':'application/json'});
     this.options = new RequestOptions({headers:this.headers});
   }
 
@@ -56,7 +59,41 @@ export class EditService {
   }
 
   updateTheme(image): Observable<any>{
-    return this.http.put(this.prodsUrl+'/1',JSON.stringify({image:image}),this.options).map((res: Response) => res.json())
+    return this.http.put(this.prodsUrl+'/1',JSON.stringify({images:image}),this.options).map((res: Response) => res.json())
+  }
+
+  getComments(id): Observable<Comment[]>{
+    return this.http.get(this.commentsUrl+"/"+id)
+      .map((response: Response) => <Comment[]>response.json())
+  }
+
+  createComment(comment:Comment){
+    return this.http.post(this.commentsUrl,JSON.stringify(comment),this.options)
+      .map((res: Response) => res.json());
+  }
+
+  deleteComment(id_com, id_post){
+    return this.http.delete(this.commentsUrl+'/'+id_com+','+id_post, this.options)
+      .map((res: Response) => res.json());
+  }
+
+  createUser(user:User){
+    return this.http.post(this.usersUrl,JSON.stringify(user),this.options)
+      .map((res: Response) => res.json());
+  }
+
+  getUser(id): Observable<User>{
+    return this.http.get(this.usersUrl+"/"+id)
+      .map((response: Response) => <User>response.json())
+  }
+
+  deleteUser(id){
+    return this.http.delete(this.usersUrl+'/'+id, this.options)
+      .map((res: Response) => res.json());
+  }
+
+  updateUser(user:User): Observable<User>{
+    return this.http.put(this.usersUrl +'/'+user.id,JSON.stringify(user),this.options).map((res: Response) => res.json())
   }
 
 }

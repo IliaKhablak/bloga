@@ -41,7 +41,7 @@
 	</div>
 	<div class="row">
 		<div class="input-field col s12">
-			<textarea class="materialize-textarea validate" id="text"
+			<textarea [froalaEditor] class="materialize-textarea validate" id="text"
 				name="text" #text='ngModel'[(ngModel)]='post.text' required>
 			</textarea>
 			<label for="text" data-error="Text is required" data-success="Everithing is ok now" class="active">Text</label>
@@ -51,7 +51,7 @@
 		<div class="file-field input-field col s12 ">
 	      <div class="btn">
 	        <span>File</span>
-				<input type="file" (change)="getFile2($event)" multiple id="needreset">
+				<input type="file" (change)="getFile2($event)" id="needreset">
 			</div>
 			<div class="file-path-wrapper">
     			<input class="file-path validate" type="text" placeholder="Image require">
@@ -65,9 +65,29 @@
 	</div>
 
 	<div *ngIf="urls.length > 0" class="center">
-		<a *ngFor="let url of urls; let inx = index" (click)="delFromUpl2(inx)"><img  style='width:60px;height:auto;margin:5px;' [src]="url" class="hoverable img"></a>
+		<div *ngFor="let url of urls; let inx = index">
+			<a  (click)="delFromUpl2(inx)"><img  style='width:60px;height:auto;margin:5px;' [src]="url[0]" class="hoverable img" align="middle"></a><a (click)="edit_descr(inx)"><p style="vertical-align: middle;" class="center">{{url[1]}}</p></a>
+		</div>
 	</div>
 	<div>
 		<button type="submit" class="waves-effect waves-teal btn" [disabled]="!postForm.form.valid">Create</button>
 	</div>
 </form>
+
+
+<div class="modal" materialize="modal" [materializeActions]="modalActions" [materializeParams]="[{dismissible:false}]">
+    <div class="modal-content">
+	    <div class="row">
+	    	<form (ngSubmit)="add_descr()" #modForm='ngForm'>
+	    		<div class="input-field col s12">
+					<input type="text" name="descr"
+					id="descr" class="validate"
+					[(ngModel)]='descr'
+					required>
+					<label for="descr" data-error="descr is required" data-success="Everithing is ok now" class="active">descr</label>
+				</div>
+	    		<button type="submit" class="waves-effect waves-teal btn" [disabled]="!modForm.form.valid">Create</button>
+	    	</form>
+	   	</div>
+    </div>
+</div>

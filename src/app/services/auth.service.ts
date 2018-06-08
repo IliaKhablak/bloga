@@ -16,6 +16,10 @@ export class AuthService {
     )
   }
 
+  loggedIn(){
+    return this.authService.userSignedIn();
+  }
+
   logOutUser():Observable<Response>{
 
     return this.authService.signOut().map(
