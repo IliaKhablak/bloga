@@ -5,16 +5,41 @@ h1{
 }
 
 #carousel{
-	width: 100vw;
-  	height: 50vw;
-	/*padding-bottom:56.25%;
-  	position:relative;		*/
+	width: 100vw !important;
+  	height: 50vw !important;
+  	/*position:absolute;
+	  left:0;
+	  top:0;
+	  right:0;
+	  bottom:0;*/
+  	/*width: 100%;
+	padding-bottom:56.25%;
+  	position:relative;	*/	
+}
+
+.image_carousel{
+	width: 100% !important;
+  	height: 100% !important;
+  	min-height: 0px !important;
+  	position: absolute;
+  	top: 0px;
+  	left:0px;
+  	right: 0px;
+  	bottom: 0px;
+  	transform: none !important; 
+}
+
+#slider{
+	width: 100vw !important;
+  	height: 55vw !important;
+	/*width: 100%;
+	padding-bottom:50%;
+  	position:relative;	*/
 }
 
 
-#carousel a img{
-	width: 100%;
-	height: 100%;
+.img_slider{
+	background-size: 100% 100% !important;
 }
 
 .divider{
@@ -29,7 +54,7 @@ h1{
 	font-family: 'tahoma';
 	margin-top: 20px;
 	margin-bottom: -10px;
-	font-weight: bold;
+	/*font-weight: bold;*/
 	color: #bdbdbd;
 }
 
@@ -49,6 +74,7 @@ h1{
 	height: 100%;
 }
 
+
 #sotial{
 	text-align: center;
 }
@@ -63,7 +89,7 @@ h1{
 }
 
  .wow:hover{
-	background-color: #f8bbd0 !important;
+	background-color: #f48fb1 !important;
 }
 
 .hexagon {
@@ -85,7 +111,14 @@ h1{
 	width: 100%;
     padding-top: 100%;
     position:relative;
+    transition: all .2s ease-in-out;
+
 }
+
+.cont:hover{
+	transform: scale(1.1);
+}
+
 
 .truncate2{
   padding-top: 15px;
@@ -107,8 +140,39 @@ h1{
 .category2{
 	margin-top: 0px;
 	font-family: 'tahoma';
-	font-weight: bold;
+	/*font-weight: bold;*/
 	color: #bdbdbd;
 	text-align: left;
 	padding-left: 5px;
 }
+
+.divider2{
+	margin-bottom: 15px;
+	color: #bdbdbd;
+	width: 80%;
+	font-weight: bold;
+	overflow: hidden;
+	margin-right: auto;
+	margin-left: auto;
+	font-size: 20px;
+	height: 25px;
+}
+
+.divider3{
+	position: relative;
+	top: -9px;
+	margin-bottom: 15px;
+	width: 80%;
+	font-weight: bold;
+	overflow: hidden;
+	margin-right: auto;
+	margin-left: auto;
+	font-size: 20px;
+	height: 25px;
+}
+
+/*.circle-img{
+  background: url(/assets/desti.jpg) 50% 50% no-repeat; 
+  width: 100%;
+  height: 250px;
+}*/

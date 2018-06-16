@@ -1,0 +1,50 @@
+h3{
+	font-family: 'Alex Brush';
+	margin-top: 5px;
+}
+
+.divider{
+	width: 200px;
+	height: 1px;
+	background-color: #616161;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 20px;
+	margin-bottom: 10px;
+}
+
+.footer{
+	position: fixed;
+	bottom: 0px;
+	width: 100%;
+	height: 75px;
+	z-index: 10;
+}
+
+
+.hexagon {
+  -webkit-clip-path: polygon(100% 50%, 75% 100%, 25% 100%, 0 50%, 25% 0, 75% 0);
+  clip-path: polygon(100% 50%, 75% 100%, 25% 100%, 0 50%, 25% 0, 75% 0);
+  background: no-repeat;
+  background-size: cover;
+  margin: 10px auto;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}
+
+.cont{
+	width: 100%;
+    padding-top: 100%;
+    position:relative;
+    transition: all .2s ease-in-out;
+    margin: 10px;
+}
+
+.cont:hover{
+	transform: scale(1.1);
+}

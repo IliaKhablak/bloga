@@ -9,20 +9,26 @@ import {User} from '../objects/user';
 
 @Injectable()
 export class EditService {
-	carouselEl = document.getElementById('carousel');
-	actions = new EventEmitter<string|MaterializeAction>();
+	// carouselEl = document.getElementById('carousel');
+	// actions = new EventEmitter<string|MaterializeAction>();
 	urls:string[] = [];
 	headers: Headers;
 	options: RequestOptions;
-	private prodsUrl = 'http://0.0.0.0:3000/themes';
-  private postsUrl = 'http://0.0.0.0:3000/posts';
-  private commentsUrl = 'http://0.0.0.0:3000/comments';
-  private usersUrl = 'http://0.0.0.0:3000/user_blas';
+	private prodsUrl = 'https://protected-atoll-70549.herokuapp.com/themes';
+  private postsUrl = 'https://protected-atoll-70549.herokuapp.com/posts';
+  private commentsUrl = 'https://protected-atoll-70549.herokuapp.com/comments';
+  private usersUrl = 'https://protected-atoll-70549.herokuapp.com/user_blas';
+  private galleryUrl = 'https://protected-atoll-70549.herokuapp.com/galleries';
   post = new Post;
   posts:Post[] = [];
   user = new User;
   cats:Post[] = [];
   catsItem:Post[] = null;
+  galleryImgs:string[] = [];
+  galleryVideos:string[] = [];
+  sideBarVar:string = 'norm';
+  homeSlider = new EventEmitter<string|MaterializeAction>();
+  
 
 
   constructor(private http:Http) {
@@ -62,6 +68,19 @@ export class EditService {
     return this.http.put(this.prodsUrl+'/1',JSON.stringify({images:image}),this.options).map((res: Response) => res.json())
   }
 
+  getGallery(): Observable<any>{
+    return this.http.get(this.galleryUrl)
+      .map((response: Response) => <any>response.json())
+  }
+
+  updateGallery(image): Observable<any>{
+    return this.http.put(this.galleryUrl+'/1',JSON.stringify({images:image}),this.options).map((res: Response) => res.json())
+  }
+
+  updateGalleryVid(video): Observable<any>{
+    return this.http.put(this.galleryUrl+'/1',JSON.stringify({videos:video}),this.options).map((res: Response) => res.json())
+  }
+
   getComments(id): Observable<Comment[]>{
     return this.http.get(this.commentsUrl+"/"+id)
       .map((response: Response) => <Comment[]>response.json())
@@ -94,6 +113,12 @@ export class EditService {
 
   updateUser(user:User): Observable<User>{
     return this.http.put(this.usersUrl +'/'+user.id,JSON.stringify(user),this.options).map((res: Response) => res.json())
+  }
+
+  samePosts(value){
+    let same:Post[] = [];
+    if (value) same = this.posts.filter(item => item.category.toLowerCase().indexOf(value.toLowerCase()) > -1);
+    return same;
   }
 
 }

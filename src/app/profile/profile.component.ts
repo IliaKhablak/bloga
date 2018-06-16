@@ -162,4 +162,80 @@ export class ProfileComponent implements OnInit {
     this.openModal();
   }
 
+  getFile3(fileInput:any){
+    let self = this;
+    let file = fileInput.target.files;
+    for (let i=0; i < file.length; i++){
+      this.fileEvent3(file[i])
+    }
+  }
+
+  fileEvent3(data:any){
+    this.sucess = false;
+    this.img_upload = true;
+    let self = this;
+    let params = {Bucket: keys.aws_bucket, Key: 'gallery/images/'+this.makeid(), Body: data};
+    let s3 = new this.AWS.S3.ManagedUpload({params: params});
+    s3.on('httpUploadProgress', function(evt) {
+      $('#pus').css('width','0%');
+      $('#pus').css('width',evt.loaded*100/evt.total+'%');
+    }).send(function(error, s3res) { 
+      if (error) {self.err = error.message;}else{self.sucess = true;};
+      let a = self.edit.galleryImgs.length;
+      let urlsa = self.edit.galleryImgs;
+      urlsa[a] = 'https://s3-ap-southeast-1.amazonaws.com/'+keys.aws_bucket+'/'+s3res.Key;
+      self.edit.updateGallery(urlsa).subscribe(res=>self.edit.galleryImgs=res.images)
+    });
+  }
+
+  delFromUpl3(idx){
+    let self = this;
+    let s3 = new this.AWS.S3().deleteObject({Bucket: keys.aws_bucket, Key: 'gallery/images/'+this.edit.galleryImgs[idx].split('/')[this.edit.galleryImgs[idx].split('/').length-1]},function(err, data) {
+      if (data){
+        self.edit.galleryImgs.splice(idx, 1);
+        self.edit.updateGallery(self.edit.galleryImgs).subscribe(res=>self.edit.galleryImgs=res.images)
+      }else{console.log(err)}
+    }); 
+    
+  }
+
+  getFile4(fileInput:any){
+    let self = this;
+    let file = fileInput.target.files;
+    for (let i=0; i < file.length; i++){
+      this.fileEvent4(file[i])
+    }
+  }
+
+  fileEvent4(data:any){
+    this.sucess = false;
+    this.img_upload = true;
+    let self = this;
+    let params = {Bucket: keys.aws_bucket, Key: 'gallery/videos/'+this.makeid(), Body: data};
+    let s3 = new this.AWS.S3.ManagedUpload({params: params});
+    s3.on('httpUploadProgress', function(evt) {
+      $('#pus').css('width','0%');
+      $('#pus').css('width',evt.loaded*100/evt.total+'%');
+    }).send(function(error, s3res) { 
+      if (error) {self.err = error.message;}else{self.sucess = true;};
+      let a = self.edit.galleryVideos.length;
+      let urlsa = self.edit.galleryVideos;
+      urlsa[a] = 'https://s3-ap-southeast-1.amazonaws.com/'+keys.aws_bucket+'/'+s3res.Key;
+      self.edit.updateGalleryVid(urlsa).subscribe(res=>self.edit.galleryVideos=res.videos)
+    });
+  }
+
+  delFromUpl4(idx){
+    let self = this;
+    if(window.confirm('Desti, are you sure you want to delete this video?')){
+      let s3 = new this.AWS.S3().deleteObject({Bucket: keys.aws_bucket, Key: 'gallery/videos/'+this.edit.galleryVideos[idx].split('/')[this.edit.galleryVideos[idx].split('/').length-1]},function(err, data) {
+        if (data){
+          self.edit.galleryVideos.splice(idx, 1);
+          self.edit.updateGalleryVid(self.edit.galleryVideos).subscribe(res=>self.edit.galleryVideos=res.videos)
+        }else{console.log(err)}
+      }); 
+      
+      }
+    }
+
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter } from '@angular/core';
+import { Component, OnInit, EventEmitter,HostListener, ViewChild } from '@angular/core';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {EditService} from '../services/edit.service';
 import {keys} from 'config';
@@ -6,13 +6,36 @@ import {Post} from '../objects/post';
 import {MaterializeAction} from "angular2-materialize";
 import {Comment} from '../objects/comment';
 import {AuthService} from '../services/auth.service';
+import * as $ from 'jquery';
+import { trigger, state, animate, transition, style, query, stagger, keyframes } from '@angular/animations';
+import {Angular2TokenService} from "angular2-token";
+import {Observable} from 'rxjs/Rx';
+
 
 @Component({
   selector: 'app-post-show',
   templateUrl: './post-show.component.html',
-  styleUrls: ['./post-show.component.css']
+  styleUrls: ['./post-show.component.css'],
+  animations: [
+  trigger('listAnimation', [
+      transition('* => *', [
+
+        query(':enter', style({ opacity: 0 }), {optional: true}),
+
+        query(':enter', stagger('200ms', [
+          animate('1s ease-in', keyframes([
+            style({opacity: 0, transform: 'translateY(-75%)', offset: 0}),
+            style({opacity: .5, transform: 'translateY(35px)',  offset: 0.3}),
+            style({opacity: 1, transform: 'translateY(0)',     offset: 1.0}),
+          ]))]), {optional: true})
+      ])
+    ])
+  ]
 })
 export class PostShowComponent implements OnInit {
+
+  @ViewChild('slider') sliderEl;
+  @ViewChild('carousel') carouselEl;
 
 	AWS = require('aws-sdk');
   pushed:boolean = false;
@@ -25,20 +48,54 @@ export class PostShowComponent implements OnInit {
   comment = new Comment;
   comments:Comment[] = [];
   news:any;
+  // actions = new EventEmitter<string|MaterializeAction>();
+  scrollPos:number = 0;
+  Counter:number = 0;
+  fixed:boolean = false;
+  action = new EventEmitter<string|MaterializeAction>();
+  carus = new EventEmitter<string|MaterializeAction>();
 
+  constructor(private router:Router,
+    private route:ActivatedRoute, 
+    public edit:EditService, 
+    public authService:AuthService, 
+    public auth:Angular2TokenService) {
 
-  constructor(private router:Router,private route:ActivatedRoute, public edit:EditService, public authService:AuthService) {
-  	this.route.params.subscribe(
-      params => {
-      	 let id = params['id'];
-      	this.edit.getPost(id).subscribe(res=>this.edit.post=res.json());
-        this.edit.getComments(id).subscribe(res=>this.comments=res);
-      })
-  	this.AWS.config.update({region: 'ap-southeast-1', credentials: {"accessKeyId": keys.aws_id, "secretAccessKey": keys.aws_key}});
-    
+  }
+
+  theBegin(id){
+    this.edit.getComments(id).subscribe(res=>this.comments=res);
+  }
+
+  random(){
+    return Math.floor((Math.random() * this.edit.posts.length) + 1)-1;
   }
 
   ngOnInit() {
+    this.edit.sideBarVar = 'show';
+    this.route.params.subscribe(
+      params => {
+         let id = params['id'];
+        this.edit.getPost(id).subscribe(res=>{
+          this.edit.post=res.json();
+          // this.sliderEl.nativeElement.classList.toggle('initialized');
+          $('.indicators').remove();
+          this.action.emit('slider');
+          window.setTimeout(()=>{
+            this.carus.emit('carousel');
+            this.carouselEl.nativeElement.classList.toggle('initialized');
+          },1000);
+          
+          // this.carus.emit('carousel');
+          // this.carus.emit('carousel');
+
+        });
+        this.edit.getComments(id).subscribe(res=>this.comments=res);
+      })
+    this.AWS.config.update({region: 'ap-southeast-1', credentials: {"accessKeyId": keys.aws_id, "secretAccessKey": keys.aws_key}});
+    window.scrollTo(0,0);
+    let timer = Observable.timer(0,5000);
+    timer.subscribe(t=>this.theBegin(this.edit.post.id));
   }
 
   deletePost(id){
@@ -148,6 +205,31 @@ export class PostShowComponent implements OnInit {
     if(window.confirm('Are you sure you want to delete this comment?')){
       this.edit.deleteComment(id_com,id_post).subscribe(res=>this.comments=res);
     }
+  }
+
+   ngAfterViewChecked(){
+     let a = document.getElementsByClassName('sb-group') as HTMLCollectionOf<HTMLElement>;
+     for (let i=0;i<a.length;i+=1){
+       a[i].style.display = "block";
+     }
+   }
+
+   goToShow(id):void {
+    let postLink = ['/posts', id];
+    this.router.navigate(postLink);
+    this.ngOnInit();
+  }
+
+   @HostListener ('window:scroll' ,['$event'])
+   onWindowScroll() {
+    const offset = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+      if (offset > this.scrollPos) {
+          this.Counter +=1
+      } else {
+          this.Counter -=1
+      }
+      this.scrollPos = offset;
+      if (this.scrollPos > 205){this.fixed = true}else{this.fixed = false}
   }
 
 }

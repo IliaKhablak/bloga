@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
   token_auth_config: {
-    apiBase: 'http://0.0.0.0:3000/' 
+    apiBase: 'https://protected-atoll-70549.herokuapp.com' 
     // 'http://0.0.0.0:3000'
   }
 };

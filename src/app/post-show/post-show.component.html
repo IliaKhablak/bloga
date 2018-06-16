@@ -1,10 +1,142 @@
-<div>
-	{{edit.post.title}}
-	<img *ngFor="let img of edit.post.images" [src]="img[0]" style="height: 100px;width: auto;">
-	<a (click)="deletePost(edit.post.id)">delete |</a>
-	<a (click)="bla()"> edit</a>
-	<div [froalaView]="edit.post.text"></div>
+<div style="overflow: hidden;">
+<div class="container"><h4 class="center flow-text" style="margin-top: 50px;margin-bottom: 50px;">{{edit.post.title}}</h4></div>
+
+<div class="row" style="margin-bottom: 100px;">
+
+	<div class="col s12 m9 l9" style="padding: 0px;">
+
+
+		<div class="hide-on-med-and-up">
+			<div class="category">{{edit.post.category}}/{{edit.post.created_at | date: 'dd.MM.yyyy'}}</div>
+			<div #carousel id="carousel3" class="carousel carousel-slider" [materializeActions]="carus" materialize="carousel"  [materializeParams]="[{full_width: true, indicators:true}]">
+				    <a *ngFor="let img of edit.post.images" class="carousel-item image_carousel">
+				    	<img [src]="img[0]" class="image_carousel">
+				    	<!-- <div class="carouselCaption">{{img[1]}}</div> -->
+				    </a>
+			</div>
+			<div [froalaView]="edit.post.text" style="padding: 5px;"></div>
+			<div class="divider"></div>
+			<div class="divider"></div>
+	    </div>
+
+		<div class="container hide-on-small-only">
+			<div class="category">{{edit.post.category}}/{{edit.post.created_at | date: 'dd.MM.yyyy'}}</div>
+			<div #slider class="slider" materialize='slider' [materializeActions]="action" id='slider2'>
+			    <ul class="slides" id="carousel2">
+			      <li *ngFor="let img of edit.post.images" >
+			        	<img [src]="img[0]" class="slider_img">
+			        	<div class="imgCaption">{{img[1]}}</div>
+			        <!-- <div class="caption right">
+			          <h5 class="light grey-text text-lighten-3">{{img[1]}}</h5>
+			        </div> -->
+			      </li>
+			    </ul>
+			</div>
+			<div [froalaView]="edit.post.text"></div>
+			<div class="divider"></div>
+			<div class="divider"></div>
+		</div>
+
+		<div class="container">
+				<H5 id="comments">Comments:</H5>
+				<div *ngFor="let comment of comments">
+						{{comment.created_at | date: 'dd/MM/yyyy hh:mm'}} <b>{{comment.user_name}}</b> said: <a (click)="deleteComment(comment.id,comment.post_id)" class="right" style="margin-right: 30px;" *ngIf="(edit.user.id && edit.user.id == comment.user_id) || (auth.userSignedIn())"><i class="material-icons black-text">delete</i></a>
+						<div style="padding-bottom:20px;padding-top: 5px;color: #616161;">{{comment.text}}</div>
+				</div>
+					
+
+
+				<form (ngSubmit)="add_com(comment);comForm.reset();" #comForm='ngForm'>
+					<blockquote *ngIf="!edit.user.id" style="color: #ee6e73;">Subscribe before put the comment, unsubscribed users can not delete their comments!</blockquote>
+					<div class="switch" *ngIf="edit.user.id">
+					    <label>
+					      Leave comment as {{edit.user.name}}
+					      <input type="checkbox" name="news" [(ngModel)]='news'>
+					      <span class="lever"></span>
+					      Leave comment under another name
+					    </label>
+					</div>
+					<br>
+					<div class="input-field col s12" *ngIf="!edit.user.id || news">
+						<input type="text" name="name"
+						id="name" class="validate"
+						[(ngModel)]='comment.user_name'
+						required>
+						<label for="name" data-error="name is required" data-success="Everithing is ok now" class="active">name</label>
+					</div>
+					<div class="input-field col s12">
+						<textarea class="materialize-textarea validate"
+							name="text" #text='ngModel'[(ngModel)]='comment.text' required>
+						</textarea>
+					</div><br>
+					<button type="submit" class="waves-effect waves-light btn-floating pink lighten-4 grey-text text-darken-2 z-depth-0 wow" style="margin: 20px auto 20px auto;border: 2px solid #616161;border-radius: 5px;font-weight: bold;width: 150px;padding: 0px 10px 20px 10px;" [disabled]="!comForm.form.valid">Sounds good</button>
+				</form>
+			</div>
+			<div class="center hide-on-med-and-up" *ngIf="auth.userSignedIn()">
+		        <a (click)="deletePost(edit.post.id)" class="waves-effect waves-light btn transparent grey-text text-darken-2 z-depth-0 wow" style="margin-top:10px;border: 2px solid #616161;border-radius: 5px;font-weight: bold;"><i class="material-icons black-text">delete</i></a>
+				<a (click)="bla()" class="waves-effect waves-light btn transparent grey-text text-darken-2 z-depth-0 wow" style="margin-top:10px;border: 2px solid #616161;border-radius: 5px;font-weight: bold;"><i class="material-icons black-text">edit</i></a>
+			</div>
+			<div class="hide-on-med-and-up container">
+				<a class="waves-effect waves-light btn white-text z-depth-0 grey darken-2" style="margin: 20px auto 10px auto;border: 2px solid #616161;border-radius: 5px;font-weight: bold;width: 100%;padding-left: 10px;padding-right: 10px;">SIMILAR POSTS</a>
+				<div style="overflow-y: scroll;overflow-x: hidden;height: 45vh;width: 90vw;">
+				    <div class="row" *ngFor="let post of edit.samePosts(edit.post.category); let idx = index" style="margin-bottom: 5px;">
+				      <div *ngIf="idx != 0" style="position: relative; top: -9px;text-align: center;">_ _ _ _ _ _ _ _ _ _ _ _ _</div>
+				      <a (click)="goToShow(post.id)">
+				      <div class="col s5" style="padding: 0px;">
+				        <div class="cont">
+				          <div class="hexagon" [ngStyle]="{'background-image': 'url(' + post.images[0][0] + ')'}"></div>
+				        </div>
+				      </div>
+				      <div class="col s7" style="padding: 0px;">
+				        <div class="truncate2" style="font-weight:bold;color:#616161;line-height: 1;">{{post.title}}</div>
+				        <p class="category2">{{post.category}}</p>
+				      </div>
+				      </a>
+				    </div>
+				</div>
+				<a class="waves-effect waves-light btn white-text z-depth-0 grey darken-2" style="margin: 20px auto 10px auto;border: 2px solid #616161;border-radius: 5px;font-weight: bold;width: 100%;"></a>
+			</div>
+	</div>
+
+<!--!!!!!!!!!!!!!!!!!!!!!!!!!!!!SIDE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!  -->
+
+	<div class="col m3 l3 hide-on-small-only" [class.fixed]="fixed">
+		<a class="waves-effect waves-light btn white-text z-depth-0 grey darken-2" style="margin: 20px auto 10px auto;border: 2px solid #616161;border-radius: 5px;font-weight: bold;width: 100%;padding-left: 10px;padding-right: 10px;">SIMILAR POSTS</a>
+		<div style="overflow-y: scroll;overflow-x: hidden;height: 45vh;width: 25vw;">
+		    <div class="row" *ngFor="let post of edit.samePosts(edit.post.category); let idx = index" style="margin-bottom: 5px;">
+		      <ng-container >
+		      <div *ngIf="idx != 0" style="position: relative; top: -9px;text-align: center;">_ _ _ _ _ _ _ _ _ _ _ _ _</div>
+		      <a (click)="goToShow(post.id)">
+		      <div class="col s5" style="padding: 0px;">
+		        <div class="cont">
+		          <div class="hexagon" [ngStyle]="{'background-image': 'url(' + post.images[0][0] + ')'}"></div>
+		        </div>
+		      </div>
+		      <div class="col s7" style="padding: 0px;">
+		        <div class="truncate2" style="font-weight:bold;color:#616161;line-height: 1;">{{post.title}}</div>
+		        <p class="category2">{{post.category}}</p>
+		      </div>
+		      </a>
+		    </ng-container>
+		    </div>
+		</div>
+	    <a class="waves-effect waves-light btn white-text z-depth-0 grey darken-2" style="margin: 20px auto 10px auto;border: 2px solid #616161;border-radius: 5px;font-weight: bold;width: 100%;">SHARE</a>
+	    <div class="center" id="miaw">
+          <share-buttons class="share_btn" [theme]="'outline'"
+             [include]="['facebook','twitter','pinterest','whatsapp','messenger','telegram','vk','email','copy']"
+             [show]="10"
+             [size]="-3"
+            ></share-buttons>
+        </div>
+        <div class="center" *ngIf="auth.userSignedIn()">
+	        <a (click)="deletePost(edit.post.id)" class="waves-effect waves-light btn transparent grey-text text-darken-2 z-depth-0 wow" style="margin-top:10px;border: 2px solid #616161;border-radius: 5px;font-weight: bold;"><i class="material-icons black-text">delete</i></a>
+			<a (click)="bla()" class="waves-effect waves-light btn transparent grey-text text-darken-2 z-depth-0 wow" style="margin-top:10px;border: 2px solid #616161;border-radius: 5px;font-weight: bold;"><i class="material-icons black-text">edit</i></a>
+		</div>
+	</div>
 </div>
+
+
+<!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!EDIT SECTION!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
 <ng-container *ngIf="pushed">
 	<h3 class="center"> Edit post</h3>
 	<form (ngSubmit)="editPost(edit.post);bla()" #postForm='ngForm'>
@@ -85,37 +217,8 @@
 
 <!-- COMMENT SECTION
 ****************************************************************************************** -->
-<H2>COMMENT SECTION</H2>
-<div *ngFor="let comment of comments">
-	{{comment.created_at | date: 'dd/MM/yyyy hh:mm'}} {{comment.user_name}} said: <a (click)="deleteComment(comment.id,comment.post_id)" *ngIf="(edit.user.id && edit.user.id == comment.user_id) || (authService.userSignedIn$ | async)">delete</a>
-	<div [froalaView]="comment.text"></div>
-</div>
 
-
-<form (ngSubmit)="add_com(comment);comForm.reset();" #comForm='ngForm'>
-	<h5 *ngIf="!edit.user.id">Subscribe before put the comment, unsubscribed users can not delete their comments!</h5>
-	<div class="switch" *ngIf="edit.user.id">
-	    <label>
-	      Leave comment as {{edit.user.name}}
-	      <input type="checkbox" name="news" [(ngModel)]='news'>
-	      <span class="lever"></span>
-	      Leave comment under another name
-	    </label>
-	</div>
-	<br>
-	<div class="input-field col s12" *ngIf="!edit.user.id || news">
-		<input type="text" name="name"
-		id="name" class="validate"
-		[(ngModel)]='comment.user_name'
-		required>
-		<label for="name" data-error="name is required" data-success="Everithing is ok now" class="active">name</label>
-	</div>
-	<div class="input-field col s12">
-		<textarea [froalaEditor] class="materialize-textarea validate"
-			name="text" #text='ngModel'[(ngModel)]='comment.text' required>
-		</textarea>
-	</div><br>
-	<button type="submit" class="waves-effect waves-teal btn" [disabled]="!comForm.form.valid">Create</button>
-</form>
 
 <!-- ****************************************************************************************** -->
+
+</div>

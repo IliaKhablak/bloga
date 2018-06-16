@@ -4,6 +4,10 @@ import {HomeComponent} from "./home/home.component";
 import {ProfileComponent} from "./profile/profile.component";
 import {AuthGuard} from "./guards/auth.guard";
 import {PostShowComponent} from './post-show/post-show.component';
+import {GalleryComponent} from './gallery/gallery.component';
+import {AboutMeComponent} from './about-me/about-me.component';
+import {ContactComponent} from './contact/contact.component';
+import {ServiceComponent} from './service/service.component';
 
 const routes: Routes = [
 	{
@@ -23,6 +27,22 @@ const routes: Routes = [
   {
     path: 'posts/:id',
     component: PostShowComponent
+  },
+  {
+    path: 'gallery',
+    component: GalleryComponent
+  },
+  {
+    path: 'aboutme',
+    component: AboutMeComponent
+  },
+  {
+    path: 'contact',
+    component: ContactComponent
+  },
+  {
+    path: 'service',
+    component: ServiceComponent
   }
 ];
 

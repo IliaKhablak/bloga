@@ -1,0 +1,32 @@
+<div class="footer orange lighten-5">
+	<div class="divider"></div>
+	<h3 class="center">Services</h3>
+</div>
+
+
+<div class="row">
+	<div class="col m3 l3 offset-m2 offset-l2" style="padding: 20px 20px 0 20px;">
+		<div style="width: 60%;" class="left">
+			<div class="cont">
+			  <div class="hexagon" [ngStyle]="{'background-image': 'url(assets/desti.jpg)'}"></div>
+			</div>
+		</div>
+		<div style="width: 60%; margin-top: -32.5%;margin-right: -10%;" class="right">
+			<div class="cont">
+			  <div class="hexagon" [ngStyle]="{'background-image': 'url(assets/desti.jpg)'}" (mouseenter)="idx2 = true" (mouseleave)="idx2 = false"></div>
+			</div>
+		</div>
+		<div style="width: 60%; margin-top: -32.5%" class="left">
+			<div class="cont">
+			  <div class="hexagon" [ngStyle]="{'background-image': 'url(assets/desti.jpg)'}" (mouseenter)="idx3 = true" (mouseleave)="idx3 = false"></div>
+			</div>
+		</div>
+	</div>
+	<div class="col m6 l6 offset-m1 offset-l1">
+		<div class="container" style="margin-top: 20%;">
+			<div *ngIf="!idx2 && !idx3" [@popupAnim]>Вслед за техническими характеристиками в сети появились реальные фотографии наследника флагманского Sony Xperia XZ2, представленного в начале этого года на MWC 2018. Смартфон получит одно важное изменение в сравнении с предшественником, но сохранит фирменный дизайн.</div>
+			<div *ngIf="idx2" [@popupAnim]>Хидео Кодзима рассказал, какую роль в создании Death Stranding сыграла Линдси Вагнер, почему выбор пал именно на эту актрису и как происходили съёмки её персонажа. Таинственная девушка, которая с насмешкой спрашивает у зрителей «Всё ещё не знаешь, кто я?», стала завершающим аккордом презентации на E3: незнакомка будто специально нагнала ещё больше загадочности на и без того мистический проект. В ней быстро угадали известную артистку, но как её помолодевшая версия оказалась в вымышленном мире японского гения? </div>
+			<div *ngIf="idx3" [@popupAnim]>На проходящей в Шанхае выставке потребительской электроники компания Hisense презентовала новый смартфон среднего уровня H20. Аппарат получил восьмиядерный чипсет Snapdragon, 6 ГБ оперативной памяти и двойную камеру. Ключевой же особенностью гаджета стал экран с минимальными рамками, занимающий почти всю переднюю сторону.</div>
+		</div>	
+	</div>
+</div>

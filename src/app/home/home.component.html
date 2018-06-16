@@ -1,51 +1,103 @@
-<h1 class="center">Desti Aryani</h1>
+<div style="overflow: hidden;">
+<h1 class="center" style="padding-left:10px;padding-right: 10px;">Desti Aryani</h1>
 
-<div #carousel id="carousel" class="carousel carousel-slider"  materialize="carousel"  [materializeActions]="edit.actions" [materializeParams]="[{full_width: true, indicators:true}]">
-        <a *ngFor="let img of edit.urls" class="carousel-item"><img [src]="img"></a>
+<div id="carousel" class="carousel carousel-slider hide-on-med-and-up"  materialize="carousel"  [materializeParams]="[{full_width: true, indicators:true}]">
+        <a *ngFor="let img of edit.urls" class="carousel-item image_carousel"><img [src]="img" class="image_carousel"></a>
+</div>
+
+
+<div class="slider hide-on-small-only" materialize='slider' id="slider" [materializeActions]="edit.homeSlider">
+  <ul class="slides" id="carousel">
+    <li *ngFor="let img of edit.urls">
+      <img [src]="img" class="img_slider"> 
+      <!-- <div class="caption center-align">
+        <h3>This is our big Tagline!</h3>
+        <h5 class="light grey-text text-lighten-3">Here's our small slogan.</h5>
+      </div> -->
+    </li>
+    <!-- <li>
+      <img src="https://lorempixel.com/580/250/nature/2"> random image
+      <div class="caption left-align">
+        <h3>Left Aligned Caption</h3>
+        <h5 class="light grey-text text-lighten-3">Here's our small slogan.</h5>
+      </div>
+    </li>
+    <li>
+      <img src="https://lorempixel.com/580/250/nature/3"> 
+      <div class="caption right-align">
+        <h3>Right Aligned Caption</h3>
+        <h5 class="light grey-text text-lighten-3">Here's our small slogan.</h5>
+      </div>
+    </li>
+    <li>
+      <img src="https://lorempixel.com/580/250/nature/4"> 
+      <div class="caption center-align">
+        <h3>This is our big Tagline!</h3>
+        <h5 class="light grey-text text-lighten-3">Here's our small slogan.</h5>
+      </div>
+    </li>  -->
+  </ul>
 </div>
 
 <div class="row">
 
 <!-- !!!!!!!!!!!!!!!!!!!HOME PAGE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
 
-  <div class="col l10" *ngIf="!edit.catsItem">
+  <div class="col s12 m10 l10 topPos" *ngIf="!edit.catsItem" >
     <ng-container *ngFor="let post of edit.posts; let idx = index">
-      <ng-container *ngIf="idx<2">
+      <div *ngIf="idx<2">
         <div class="container" style="text-align: center;" >
           <div class="divider"></div>
           <div class="category center">{{post.category}}/{{post.created_at | date: 'dd.MM.yyyy'}}</div>
-          <h5 class="center" style="margin-bottom: -5px;"><a (click)="goToShow(post.id)" style="color:#616161;">{{post.title}}</a></h5>
-          <div class="center" style="margin-bottom: 15px;color: #bdbdbd;font-weight: bold;">_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div>
+          <h4 class="center flow-text" style="margin-bottom: -5px;font-weight: bold;"><a (click)="goToShow(post.id)" style="color:#616161;font-family: 'Roboto', sans-serif;">{{post.title}}</a></h4>
+          <div class="divider2">_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ </div>
           <div class="imgDiv"><img [src]="post.images[0][0]"></div>
           <div [froalaView]="post.text" style="overflow: hidden;height: 100px;"></div>
-          <a (click)="goToShow(post.id)" class="waves-effect waves-light btn transparent grey-text text-darken-2 z-depth-0 wow" style="margin: 20px auto 40px auto;border: 2px solid #616161;border-radius: 5px;font-weight: bold;width: 200px;">READ MORE</a>
+          <a *ngIf="main" [@popupAnim] (click)="goToShow(post.id)" class="waves-effect waves-light btn-floating pink lighten-4 grey-text text-darken-2 z-depth-0 wow pulse" style="margin: 20px auto 20px auto;border: 2px solid #616161;border-radius: 5px;font-weight: bold;width: 150px;padding-right: 10px;padding-left: 10px;">READ MORE</a>
         </div>
-      </ng-container>
+        <div class="center">
+          <share-buttons class="share_btn" [theme]="'outline'"
+             [include]="['facebook','twitter','pinterest','whatsapp','messenger','telegram','vk','email','copy']"
+             [show]="10"
+             [size]="-3"
+            ></share-buttons>
+        </div>
+      </div>
     </ng-container>
   </div>
 
 <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!CATEGORY PAGE!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
 
-  <div class="col l10" *ngIf="edit.catsItem">
-    <ng-container *ngFor="let post of edit.catsItem; let idx = index">
-      <div class="container" style="text-align: center;">
-        <div class="divider"></div>
-        <div class="category center">{{post.category}}/{{post.created_at | date: 'dd.MM.yyyy'}}</div>
-        <h5 class="center" style="margin-bottom: -5px;"><a (click)="goToShow(post.id)" style="color:#616161;">{{post.title}}</a></h5>
-        <div class="center" style="margin-bottom: 15px;color: #bdbdbd;font-weight: bold;">_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div>
-        <div class="imgDiv"><img [src]="post.images[0][0]"></div>
-        <div [froalaView]="post.text" style="overflow: hidden;height: 100px;"></div>
-        <a (click)="goToShow(post.id)" class="waves-effect waves-light btn transparent grey-text text-darken-2 z-depth-0 wow" style="margin: 20px auto 40px auto;border: 2px solid #616161;border-radius: 5px;font-weight: bold;width: 200px;">READ MORE</a>
+  <div class="col s12 m10 l10 topPos" *ngIf="edit.catsItem">
+    <ng-container *ngFor="let post of edit.catsItem; let idx = index" >
+      <div *ngIf="edit.catsItem">
+        <div class="container" style="text-align: center;" >
+          <div class="divider"></div>
+          <div class="category center">{{post.category}}/{{post.created_at | date: 'dd.MM.yyyy'}}</div>
+          <h4 class="center" style="margin-bottom: -5px;font-weight: bold;"><a (click)="goToShow(post.id)" style="color:#616161;font-family: 'Roboto', sans-serif;">{{post.title}}</a></h4>
+          <div class="divider2">_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ </div>
+          <div class="imgDiv"><img [src]="post.images[0][0]"></div>
+          <div [froalaView]="post.text" style="overflow: hidden;height: 100px;"></div>
+          <a *ngIf="main" [@popupAnim] (click)="goToShow(post.id)" class="waves-effect waves-light btn-floating pink lighten-4 grey-text text-darken-2 z-depth-0 wow pulse" style="margin: 20px auto 20px auto;border: 2px solid #616161;border-radius: 5px;font-weight: bold;width: 150px;padding-right: 10px;padding-left: 10px;">READ MORE</a>
+        </div>
+        <div class="center">
+          <share-buttons class="share_btn" [theme]="'outline'"
+             [include]="['facebook','twitter','pinterest','whatsapp','messenger','telegram','vk','email','copy']"
+             [show]="10"
+             [size]="-3"
+            ></share-buttons>
+        </div>
       </div>
     </ng-container>
   </div>
 
 <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!SIDE MENU!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
 
-  <div class="col l2" style="text-align: center;padding:0px;margin-left: -20px;">
-    <a class="waves-effect waves-light btn white-text z-depth-0 grey darken-2" style="margin: 20px auto 40px auto;border: 2px solid #616161;border-radius: 5px;font-weight: bold;width: 100%;">ABOUT ME</a>
-    <img src="assets/desti.jpg" class="circle " style="width: 100%;">
-    <p style="width: 100%;font-family: 'Alex Brush';color: #616161;font-size: 20px;">Desti Aryani Don't mind me, I am a little crazy,😉 Currently rocking Bali Made in Cilacap, Indonesia Been cheeky since 1993 😘</p>
+  <div class="col s12 m2 l2" style="text-align: center;">
+    <a [routerLink]="['/aboutme']" class="waves-effect waves-light btn white-text z-depth-0 grey darken-2 imgPos" style="margin: 20px auto 40px auto;border: 2px solid #616161;border-radius: 5px;font-weight: bold;width: 100%;">ABOUT ME</a>
+    <!-- <div class="circle-img" *ngIf="side" [@popupAnim]></div> -->
+      <img src="assets/desti.jpg" class="circle" style="width: 100%;" *ngIf="side" [@popupAnim] >
+    <p style="width: 100%;font-family: 'Alex Brush';color: #616161;font-size: 20px;">Born and raised in a loving home in Java. Brown-skinned girl who dream to make a way around the world. Falls perfectly in Love with Travel, design and self improvement.</p>
     <ul id="sotial">
       <li>
         <a href="https://www.facebook.com/dhea.chayankmu"><img src="assets/facebook.png"></a>
@@ -57,16 +109,17 @@
         <a href="https://id.pinterest.com/dheachayankmu/"><img src="assets/pinterest.png"></a>
       </li>
     </ul>
-    <a class="waves-effect waves-light btn white-text z-depth-0 grey darken-2" style="margin: 20px auto 10px auto;border: 2px solid #616161;border-radius: 5px;font-weight: bold;width: 100%;">CATEGORIES</a>
-    <a *ngFor="let cat of edit.cats" (click)="catShow(cat.category)" class="waves-effect waves-light btn transparent grey-text text-darken-2 z-depth-0 wow" style="margin-top:10px;border: 2px solid #616161;border-radius: 5px;font-weight: bold;width: 100%;">{{cat.category}}</a>
-    <a (click)="edit.catsItem=null" class="waves-effect waves-light btn transparent grey-text text-darken-2 z-depth-0 wow" style="margin-top:10px;border: 2px solid #616161;border-radius: 5px;font-weight: bold;width: 100%;">ALL</a>
-    <a class="waves-effect waves-light btn white-text z-depth-0 grey darken-2" style="margin: 20px auto 10px auto;border: 2px solid #616161;border-radius: 5px;font-weight: bold;width: 100%;">RECENT POSTS</a>
-    <div class="row" *ngFor="let post of edit.posts; let idx = index" style="margin-bottom: 5px;">
+    <a class="waves-effect waves-light btn white-text z-depth-0 grey darken-2 hide-on-small-only" style="margin: 20px auto 10px auto;border: 2px solid #616161;border-radius: 5px;font-weight: bold;width: 100%;">CATEGORIES</a>
+    <a *ngFor="let cat of edit.cats" (click)="catShow(cat.category)" class="waves-effect waves-light btn transparent grey-text text-darken-2 z-depth-0 wow hide-on-small-only" style="margin-top:10px;border: 2px solid #616161;border-radius: 5px;font-weight: bold;width: 100%;">{{cat.category}}</a>
+    <a (click)="edit.catsItem=null" class="waves-effect waves-light btn transparent grey-text text-darken-2 z-depth-0 wow hide-on-small-only" style="margin-top:10px;border: 2px solid #616161;border-radius: 5px;font-weight: bold;width: 100%;">ALL</a>
+    <a class="waves-effect waves-light btn white-text z-depth-0 grey darken-2 postsPos" style="margin: 20px auto 10px auto;border: 2px solid #616161;border-radius: 5px;font-weight: bold;width: 100%;">RECENT POSTS</a>
+    <div [@listAnimation]="posts.length">
+    <div class="row" *ngFor="let post of posts; let idx = index"  style="margin-bottom: 5px;">
       <ng-container *ngIf="idx<4">
-      <div *ngIf="idx != 0" style="position: relative; top: -9px;">_ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div>
+      <div class="divider3" *ngIf="idx != 0">_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ </div>
       <a (click)="goToShow(post.id)">
       <div class="col s5" style="padding: 0px;">
-        <div class="cont">
+        <div class="cont" >
           <div class="hexagon" [ngStyle]="{'background-image': 'url(' + post.images[0][0] + ')'}"></div>
         </div>
       </div>
@@ -75,8 +128,10 @@
         <p class="category2">{{post.category}}</p>
       </div>
       </a>
-    </ng-container>
+   </ng-container>
     </div>
+  </div>
     <a class="waves-effect waves-light btn white-text z-depth-0 grey darken-2" style="margin: 20px auto 10px auto;border: 2px solid #616161;border-radius: 5px;font-weight: bold;width: 100%;"></a>
   </div>
+</div>
 </div>
