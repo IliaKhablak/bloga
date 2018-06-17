@@ -1,5 +1,4 @@
 import { Component, OnInit, EventEmitter } from '@angular/core';
-import {keys} from 'config';
 import {Router} from "@angular/router";
 import {AuthService} from "../services/auth.service";
 import {Angular2TokenService} from "angular2-token";
@@ -7,6 +6,8 @@ import * as $ from 'jquery';
 import {EditService} from '../services/edit.service';
 import {Post} from '../objects/post';
 import {MaterializeAction} from "angular2-materialize";
+import { environment } from '../../environments/environment';
+
 
 @Component({
   selector: 'app-profile',
@@ -31,7 +32,7 @@ export class ProfileComponent implements OnInit {
               public edit:EditService
               ) 
   {
-  	this.AWS.config.update({region: 'ap-southeast-1', credentials: {"accessKeyId": keys.aws_id, "secretAccessKey": keys.aws_key}});
+  	this.AWS.config.update({region: 'ap-southeast-1', credentials: {"accessKeyId": environment.aws_id, "secretAccessKey": environment.aws_key}});
   	
   }
 
@@ -47,9 +48,9 @@ export class ProfileComponent implements OnInit {
       this.img_upload = false;
       this.edit.posts = res.posts;
        post.images.forEach(function(el){
-        let s3 = new self.AWS.S3().copyObject({Bucket: keys.aws_bucket+'/'+res.id, CopySource: keys.aws_bucket+'/'+el[0].split('/')[el[0].split('/').length-1], Key: el[0].split('/')[el[0].split('/').length-1]}, function(err, data) {
+        let s3 = new self.AWS.S3().copyObject({Bucket: environment.aws_bucket+'/'+res.id, CopySource: environment.aws_bucket+'/'+el[0].split('/')[el[0].split('/').length-1], Key: el[0].split('/')[el[0].split('/').length-1]}, function(err, data) {
         
-         let s3 = new self.AWS.S3().deleteObject({Bucket: keys.aws_bucket, Key: el[0].split('/')[el[0].split('/').length-1]},function(err, data) {
+         let s3 = new self.AWS.S3().deleteObject({Bucket: environment.aws_bucket, Key: el[0].split('/')[el[0].split('/').length-1]},function(err, data) {
              
          }); 
         })   
@@ -71,7 +72,7 @@ export class ProfileComponent implements OnInit {
     this.sucess = false;
     this.img_upload = true;
     let self = this;
-    let params = {Bucket: keys.aws_bucket, Key: 'themes/'+this.makeid(), Body: data};
+    let params = {Bucket: environment.aws_bucket, Key: 'themes/'+this.makeid(), Body: data};
     let s3 = new this.AWS.S3.ManagedUpload({params: params});
     s3.on('httpUploadProgress', function(evt) {
       $('#pus').css('width','0%');
@@ -80,7 +81,7 @@ export class ProfileComponent implements OnInit {
       if (error) {self.err = error.message;}else{self.sucess = true;};
       let a = self.edit.urls.length;
       let urlsa = self.edit.urls;
-      urlsa[a] = 'https://s3-ap-southeast-1.amazonaws.com/'+keys.aws_bucket+'/'+s3res.Key;
+      urlsa[a] = 'https://s3-ap-southeast-1.amazonaws.com/'+environment.aws_bucket+'/'+s3res.Key;
       self.edit.updateTheme(urlsa).subscribe(res=>self.edit.urls=res.images)
     });
   }
@@ -97,7 +98,7 @@ export class ProfileComponent implements OnInit {
     this.sucess = false;
     this.img_upload = true;
     let self = this;
-    let params = {Bucket: keys.aws_bucket, Key: this.makeid(), Body: data};
+    let params = {Bucket: environment.aws_bucket, Key: this.makeid(), Body: data};
     let s3 = new this.AWS.S3.ManagedUpload({params: params});
     s3.on('httpUploadProgress', function(evt) {
       $('#pus2').css('width','0%');
@@ -106,7 +107,7 @@ export class ProfileComponent implements OnInit {
       if (error) {self.err = error.message;}else{self.sucess = true;};
       let a = self.urls.length;
       self.urls[a] = [];
-      self.urls[a][0] = 'https://s3-ap-southeast-1.amazonaws.com/'+keys.aws_bucket+'/'+s3res.Key;
+      self.urls[a][0] = 'https://s3-ap-southeast-1.amazonaws.com/'+environment.aws_bucket+'/'+s3res.Key;
       // self.urls[a][1] = self.add_description();
       self.openModal();
     });
@@ -114,7 +115,7 @@ export class ProfileComponent implements OnInit {
 
   delFromUpl2(idx){
     let self = this;
-    let s3 = new this.AWS.S3().deleteObject({Bucket: keys.aws_bucket, Key: this.urls[idx][0].split('/')[this.urls[idx][0].split('/').length-1]},function(err, data) {
+    let s3 = new this.AWS.S3().deleteObject({Bucket: environment.aws_bucket, Key: this.urls[idx][0].split('/')[this.urls[idx][0].split('/').length-1]},function(err, data) {
       if (data){self.urls.splice(idx, 1);}else{console.log(err)}
     }); 
     
@@ -139,7 +140,7 @@ export class ProfileComponent implements OnInit {
 
   delFromUpl(idx){
     let self = this;
-    let s3 = new this.AWS.S3().deleteObject({Bucket: keys.aws_bucket, Key: 'themes/'+this.edit.urls[idx].split('/')[this.edit.urls[idx].split('/').length-1]},function(err, data) {
+    let s3 = new this.AWS.S3().deleteObject({Bucket: environment.aws_bucket, Key: 'themes/'+this.edit.urls[idx].split('/')[this.edit.urls[idx].split('/').length-1]},function(err, data) {
       if (data){
       	self.edit.urls.splice(idx, 1);
       	self.edit.updateTheme(self.edit.urls).subscribe(res=>self.edit.urls=res.images)
@@ -174,7 +175,7 @@ export class ProfileComponent implements OnInit {
     this.sucess = false;
     this.img_upload = true;
     let self = this;
-    let params = {Bucket: keys.aws_bucket, Key: 'gallery/images/'+this.makeid(), Body: data};
+    let params = {Bucket: environment.aws_bucket, Key: 'gallery/images/'+this.makeid(), Body: data};
     let s3 = new this.AWS.S3.ManagedUpload({params: params});
     s3.on('httpUploadProgress', function(evt) {
       $('#pus').css('width','0%');
@@ -183,14 +184,14 @@ export class ProfileComponent implements OnInit {
       if (error) {self.err = error.message;}else{self.sucess = true;};
       let a = self.edit.galleryImgs.length;
       let urlsa = self.edit.galleryImgs;
-      urlsa[a] = 'https://s3-ap-southeast-1.amazonaws.com/'+keys.aws_bucket+'/'+s3res.Key;
+      urlsa[a] = 'https://s3-ap-southeast-1.amazonaws.com/'+environment.aws_bucket+'/'+s3res.Key;
       self.edit.updateGallery(urlsa).subscribe(res=>self.edit.galleryImgs=res.images)
     });
   }
 
   delFromUpl3(idx){
     let self = this;
-    let s3 = new this.AWS.S3().deleteObject({Bucket: keys.aws_bucket, Key: 'gallery/images/'+this.edit.galleryImgs[idx].split('/')[this.edit.galleryImgs[idx].split('/').length-1]},function(err, data) {
+    let s3 = new this.AWS.S3().deleteObject({Bucket: environment.aws_bucket, Key: 'gallery/images/'+this.edit.galleryImgs[idx].split('/')[this.edit.galleryImgs[idx].split('/').length-1]},function(err, data) {
       if (data){
         self.edit.galleryImgs.splice(idx, 1);
         self.edit.updateGallery(self.edit.galleryImgs).subscribe(res=>self.edit.galleryImgs=res.images)
@@ -211,7 +212,7 @@ export class ProfileComponent implements OnInit {
     this.sucess = false;
     this.img_upload = true;
     let self = this;
-    let params = {Bucket: keys.aws_bucket, Key: 'gallery/videos/'+this.makeid(), Body: data};
+    let params = {Bucket: environment.aws_bucket, Key: 'gallery/videos/'+this.makeid(), Body: data};
     let s3 = new this.AWS.S3.ManagedUpload({params: params});
     s3.on('httpUploadProgress', function(evt) {
       $('#pus').css('width','0%');
@@ -220,7 +221,7 @@ export class ProfileComponent implements OnInit {
       if (error) {self.err = error.message;}else{self.sucess = true;};
       let a = self.edit.galleryVideos.length;
       let urlsa = self.edit.galleryVideos;
-      urlsa[a] = 'https://s3-ap-southeast-1.amazonaws.com/'+keys.aws_bucket+'/'+s3res.Key;
+      urlsa[a] = 'https://s3-ap-southeast-1.amazonaws.com/'+environment.aws_bucket+'/'+s3res.Key;
       self.edit.updateGalleryVid(urlsa).subscribe(res=>self.edit.galleryVideos=res.videos)
     });
   }
@@ -228,7 +229,7 @@ export class ProfileComponent implements OnInit {
   delFromUpl4(idx){
     let self = this;
     if(window.confirm('Desti, are you sure you want to delete this video?')){
-      let s3 = new this.AWS.S3().deleteObject({Bucket: keys.aws_bucket, Key: 'gallery/videos/'+this.edit.galleryVideos[idx].split('/')[this.edit.galleryVideos[idx].split('/').length-1]},function(err, data) {
+      let s3 = new this.AWS.S3().deleteObject({Bucket: environment.aws_bucket, Key: 'gallery/videos/'+this.edit.galleryVideos[idx].split('/')[this.edit.galleryVideos[idx].split('/').length-1]},function(err, data) {
         if (data){
           self.edit.galleryVideos.splice(idx, 1);
           self.edit.updateGalleryVid(self.edit.galleryVideos).subscribe(res=>self.edit.galleryVideos=res.videos)

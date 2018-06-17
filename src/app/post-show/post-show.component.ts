@@ -1,7 +1,6 @@
 import { Component, OnInit, EventEmitter,HostListener, ViewChild } from '@angular/core';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {EditService} from '../services/edit.service';
-import {keys} from 'config';
 import {Post} from '../objects/post';
 import {MaterializeAction} from "angular2-materialize";
 import {Comment} from '../objects/comment';
@@ -10,6 +9,7 @@ import * as $ from 'jquery';
 import { trigger, state, animate, transition, style, query, stagger, keyframes } from '@angular/animations';
 import {Angular2TokenService} from "angular2-token";
 import {Observable} from 'rxjs/Rx';
+import { environment } from '../../environments/environment';
 
 
 @Component({
@@ -92,7 +92,7 @@ export class PostShowComponent implements OnInit {
         });
         this.edit.getComments(id).subscribe(res=>this.comments=res);
       })
-    this.AWS.config.update({region: 'ap-southeast-1', credentials: {"accessKeyId": keys.aws_id, "secretAccessKey": keys.aws_key}});
+    this.AWS.config.update({region: 'ap-southeast-1', credentials: {"accessKeyId": environment.aws_id, "secretAccessKey": environment.aws_key}});
     window.scrollTo(0,0);
     let timer = Observable.timer(0,5000);
     timer.subscribe(t=>this.theBegin(this.edit.post.id));
@@ -103,7 +103,7 @@ export class PostShowComponent implements OnInit {
     	if(window.confirm('Desti, are you sure you want to delete this awesome post?')){
   	  	this.edit.deletePost(id).subscribe(res=>{
   	  		this.edit.post.images.forEach(function(el){
-  	  			let s3 = new self.AWS.S3().deleteObject({Bucket: keys.aws_bucket, Key: id+"/"+el[0].split('/')[el[0].split('/').length-1]},function(err, data) {
+  	  			let s3 = new self.AWS.S3().deleteObject({Bucket: environment.aws_bucket, Key: id+"/"+el[0].split('/')[el[0].split('/').length-1]},function(err, data) {
   		         });
   	  		})
   	  		this.edit.post = new Post;
@@ -133,7 +133,7 @@ export class PostShowComponent implements OnInit {
     this.sucess = false;
     this.img_upload = true;
     let self = this;
-    let params = {Bucket: keys.aws_bucket, Key: this.edit.post.id+'/'+this.makeid(), Body: data};
+    let params = {Bucket: environment.aws_bucket, Key: this.edit.post.id+'/'+this.makeid(), Body: data};
     let s3 = new this.AWS.S3.ManagedUpload({params: params});
     s3.on('httpUploadProgress', function(evt) {
       $('#pus2').css('width','0%');
@@ -142,7 +142,7 @@ export class PostShowComponent implements OnInit {
       if (error) {self.err = error.message;}else{self.sucess = true;};
       let a = self.edit.post.images.length;
       self.edit.post.images[a] = [];
-      self.edit.post.images[a][0] = 'https://s3-ap-southeast-1.amazonaws.com/'+keys.aws_bucket+'/'+s3res.Key;
+      self.edit.post.images[a][0] = 'https://s3-ap-southeast-1.amazonaws.com/'+environment.aws_bucket+'/'+s3res.Key;
       self.openModal();
     });
   }
@@ -161,7 +161,7 @@ export class PostShowComponent implements OnInit {
 
     let self = this;
     if(window.confirm('My love, are you sure you want to delete this picture?')){
-      let s3 = new this.AWS.S3().deleteObject({Bucket: keys.aws_bucket, Key: self.edit.post.id+'/'+this.edit.post.images[idx][0].split('/')[this.edit.post.images[idx][0].split('/').length-1]},function(err, data) {
+      let s3 = new this.AWS.S3().deleteObject({Bucket: environment.aws_bucket, Key: self.edit.post.id+'/'+this.edit.post.images[idx][0].split('/')[this.edit.post.images[idx][0].split('/').length-1]},function(err, data) {
         if (data){
           self.edit.post.images.splice(idx, 1);
           self.edit.updatePost(self.edit.post).subscribe(res=>self.edit.post=res);

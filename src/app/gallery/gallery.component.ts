@@ -46,14 +46,6 @@ export class GalleryComponent implements OnInit {
 
   constructor(public edit:EditService) { 
   	this.edit.sideBarVar = 'norm';
-    $(document).ready(function(){
-      $('video').mouseenter(function(){
-        $(this).attr('controls',"");
-      })
-      $('video').mouseleave(function(){
-        $(this).removeAttr('controls');
-      })
-    })
   }
 
   ngOnInit() {
