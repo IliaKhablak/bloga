@@ -72,6 +72,15 @@ export class HomeComponent implements OnInit {
 
   constructor(public edit:EditService,private router:Router,public share: ShareButtons) {
     this.edit.sideBarVar = 'home';
+    this.edit.getTheme().subscribe(res=>{
+      this.edit.urls=res.images;
+      this.edit.homeSlider.emit('slider');
+      this.edit.homeCarousel.emit('carousel');
+      // window.setTimeout(()=>{
+      //   if (this.edit.carouselEl) this.edit.carouselEl.classList.toggle('initialized');
+      //   this.edit.actions.emit('carousel');
+      // },2000)
+    });
   }
 
   ngOnInit() {

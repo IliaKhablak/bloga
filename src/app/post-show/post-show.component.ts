@@ -43,6 +43,7 @@ export class PostShowComponent implements OnInit {
   img_upload:boolean = false;
   err:string;
   modalActions = new EventEmitter<string|MaterializeAction>();
+  gifModal = new EventEmitter<string|MaterializeAction>();
   descr:string = '';
   inx:string = null;
   comment = new Comment;
@@ -186,6 +187,16 @@ export class PostShowComponent implements OnInit {
   closeModal() {
       this.modalActions.emit({action:"modal",params:['close']});
   }
+
+
+  openModal2() {
+      this.gifModal.emit({action:"modal",params:['open']});
+  }
+
+  closeModal2() {
+      this.gifModal.emit({action:"modal",params:['close']});
+  }
+
 
   edit_descr(inx){
     this.inx = inx.toString();;

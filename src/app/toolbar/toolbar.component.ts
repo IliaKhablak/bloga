@@ -20,15 +20,7 @@ export class ToolbarComponent implements OnInit {
   newOne:boolean = false;
 
   constructor(public authService:AuthService, private router:Router, public edit:EditService, public auth:Angular2TokenService) {
-    this.edit.getTheme().subscribe(res=>{
-      this.edit.urls=res.images;
-      this.edit.homeSlider.emit('slider');
-      this.edit.homeCarousel.emit('carousel');
-      // window.setTimeout(()=>{
-      //   if (this.edit.carouselEl) this.edit.carouselEl.classList.toggle('initialized');
-      //   this.edit.actions.emit('carousel');
-      // },2000)
-    });
+    
     this.edit.getPosts().subscribe(res=>{
       this.edit.posts=res;
       let a = [];

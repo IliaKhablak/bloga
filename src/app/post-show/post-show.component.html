@@ -95,6 +95,10 @@
 				    </div>
 				</div>
 				<a class="waves-effect waves-light btn white-text z-depth-0 grey darken-2" style="margin: 20px auto 10px auto;border: 2px solid #616161;border-radius: 5px;font-weight: bold;width: 100%;"></a>
+				<a (click)="openModal2()">
+					<img src="assets/giphy.gif" style="width: 100%;border-radius: 5px;">
+					<div class="gifCaption">Click to buy me a coffe</div>
+				</a>
 			</div>
 	</div>
 
@@ -102,7 +106,7 @@
 
 	<div class="col m3 l3 hide-on-small-only" [class.fixed]="fixed">
 		<a class="waves-effect waves-light btn white-text z-depth-0 grey darken-2" style="margin: 20px auto 10px auto;border: 2px solid #616161;border-radius: 5px;font-weight: bold;width: 100%;padding-left: 10px;padding-right: 10px;">SIMILAR POSTS</a>
-		<div style="overflow-y: scroll;overflow-x: hidden;height: 45vh;width: 25vw;">
+		<div style="overflow-y: scroll;overflow-x: hidden;height: 35vh;width: 25vw;">
 		    <div class="row" *ngFor="let post of edit.samePosts(edit.post.category); let idx = index" style="margin-bottom: 5px;">
 		      <ng-container >
 		      <div *ngIf="idx != 0" style="position: relative; top: -9px;text-align: center;">_ _ _ _ _ _ _ _ _ _ _ _ _</div>
@@ -132,6 +136,10 @@
 	        <a (click)="deletePost(edit.post.id)" class="waves-effect waves-light btn transparent grey-text text-darken-2 z-depth-0 wow" style="margin-top:10px;border: 2px solid #616161;border-radius: 5px;font-weight: bold;"><i class="material-icons black-text">delete</i></a>
 			<a (click)="bla()" class="waves-effect waves-light btn transparent grey-text text-darken-2 z-depth-0 wow" style="margin-top:10px;border: 2px solid #616161;border-radius: 5px;font-weight: bold;"><i class="material-icons black-text">edit</i></a>
 		</div>
+		<a (click)="openModal2()">
+			<img src="assets/giphy.gif" style="width: 100%;border-radius: 5px;">
+			<div class="gifCaption">Click to buy me a coffe</div>
+		</a>
 	</div>
 </div>
 
@@ -215,9 +223,22 @@
 <!-- ******************************************************************************** -->
 
 
-<!-- COMMENT SECTION
+<!-- modal 2
 ****************************************************************************************** -->
-
+<div class="modal gifModal orange lighten-5" materialize="modal" [materializeActions]="gifModal">
+    <div class="modal-content">
+	    <div class="container center">
+	    	<h5>You can transfer to my BCA account:<br>4040446465<br><br>or through PayPal:</h5>
+	    	<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+				<input type="hidden" name="cmd" value="_s-xclick">
+				<input type="hidden" name="hosted_button_id" value="KTZKSR8BSBLYS">
+				<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+				<img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+			</form>
+			<h5> Thank you!</h5>
+	   	</div>
+    </div>
+</div>
 
 <!-- ****************************************************************************************** -->
 
