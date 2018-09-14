@@ -8,7 +8,6 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
-
   },
   "private": true,
   "dependencies": {
@@ -42,6 +41,10 @@
     "rxjs-compat": "^6.2.0",
     "zone.js": "^0.8.26"
   },
+  "browserslist": [
+    "last 5 version",
+    "> 1%"
+  ],
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.6.3",
     "@angular/cli": "~6.0.3",

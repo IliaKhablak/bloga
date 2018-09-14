@@ -6,18 +6,42 @@ import {EditService} from '../services/edit.service';
 import {MaterializeAction} from "angular2-materialize";
 import {User} from '../objects/user';
 import {Angular2TokenService} from "angular2-token";
+import { trigger, state, animate, transition, style, query, stagger, keyframes } from '@angular/animations';
 
 
 @Component({
   selector: 'app-toolbar',
   templateUrl: './toolbar.component.html',
-  styleUrls: ['./toolbar.component.css']
+  styleUrls: ['./toolbar.component.css'],
+  animations:[
+    trigger(
+      'popupAnim3', [
+        transition('void => *', [
+          style({opacity: 0}),
+          animate('1000ms', style({opacity: 1}))
+        ]),
+        transition('* => void', [
+          style({opacity: 1}),
+          animate('400ms', style({opacity: 0}))
+        ])
+        ]
+        ),
+        trigger(
+          'popupAnim', [
+            transition('* => void', [
+              style({opacity: 1}),
+              animate('400ms', style({opacity: 0}))
+            ])
+            ]
+            )
+  ]
 })
 export class ToolbarComponent implements OnInit {
 
   @ViewChild('authDialog') authDialog: AuthDialogComponent;
   modalActions = new EventEmitter<string|MaterializeAction>();
   newOne:boolean = false;
+  overlayHide = true;
 
   constructor(public authService:AuthService, private router:Router, public edit:EditService, public auth:Angular2TokenService) {
     
@@ -25,20 +49,26 @@ export class ToolbarComponent implements OnInit {
       this.edit.posts=res;
       let a = [];
       let b = 0;
+      setTimeout(()=>{this.overlayHide = false;},2000)
       this.edit.cats = res.filter(item=>{if(a.indexOf(item.category)<0){a[b] = item.category;b+=1;return true;}else{b+=1;return false;}});
+    
+      this.edit.getGallery().subscribe(res=>{
+        this.edit.galleryImgs=res.images;
+        this.edit.galleryVideos=res.videos;
+      });
+      if(this.authService.loggedIn()){this.edit.getUser(2).subscribe(res=>this.edit.user=res)}
+        else{if(localStorage.getItem('DestiBlogUser')) {this.edit.getUser(localStorage.getItem('DestiBlogUser')).subscribe(res=>this.edit.user=res);}
+                else{
+                  if(localStorage.getItem('firstTime')){}else{
+                    this.newOne = true;
+                    localStorage.setItem('firstTime',"true");
+                    window.setTimeout(()=>{
+                      this.openModal();
+                    },2000)
+                  }
+                  
+      }}
     });
-    this.edit.getGallery().subscribe(res=>{
-      this.edit.galleryImgs=res.images;
-      this.edit.galleryVideos=res.videos;
-    });
-    if(this.authService.loggedIn()){this.edit.getUser(2).subscribe(res=>this.edit.user=res)}
-      else{if(localStorage['DestiBlogUser']) {this.edit.getUser(localStorage['DestiBlogUser']).subscribe(res=>this.edit.user=res);}
-              else{
-                this.newOne = true;
-                window.setTimeout(()=>{
-                  this.openModal();
-                },1000)
-              }}
   }
 
   // onlyUnique(value, a, b) {

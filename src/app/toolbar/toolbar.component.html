@@ -88,3 +88,13 @@
     </div>
 </div>
 
+<div class="overlay orange lighten-5" *ngIf="overlayHide" [@popupAnim]>
+  <div class="overlay-img" [@popupAnim3]>
+      <img src="assets/triangle.png" class="inside-overlay">
+  </div>
+  <div class="overlay-img second" [@popupAnim3]>
+      <img src="assets/triangle.png" class="inside-overlay">
+  </div>
+</div>
+
+<img *ngFor="let img of edit.galleryImgs" [src]="img" style="display:none;">
